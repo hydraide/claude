@@ -1,11 +1,11 @@
 ---
 name: hydraide
-description: Conceptual and educational explanations of HydrAIDE. How the engine works internally, why it is designed the way it is, what Swamp lifecycle, addressing, query engine, msgpack patch, subscriptions, locking, and the storage engine actually do under the hood. Use when the user asks "how does X work", "why does HydrAIDE do Y", "explain the architecture of Z", or wants to understand concepts (not write implementation code). For Go SDK code, use the `hydraidego` skill. For server operations, use the `hydraidectl` skill.
+description: Conceptual and educational explanations of HydrAIDE — how the engine works internally, why it is designed the way it is, what Swamp lifecycle, addressing, query engine, msgpack patch, subscriptions, locking, and the storage engine actually do under the hood. Use when the user asks "how does X work", "why does HydrAIDE do Y", "explain the architecture of Z", or wants to understand concepts (not write implementation code). For Go SDK code, use the `hydraidego` skill. For server operations, use the `hydraidectl` skill.
 ---
 
-# HydrAIDE Concepts and Internals
+# HydrAIDE — Concepts and Internals
 
-This skill is a router. It does not contain the explanations itself, it only points to the focused concept docs in `docs/features/`. Each doc is short and self-contained; read only the one(s) the user is asking about.
+This skill is a router. It does not contain the explanations itself — it points to the focused concept docs in `docs/features/`. Each doc is short and self-contained; read only the one(s) the user is asking about.
 
 When the user asks an educational or "how does it work" question, pick the matching topic from the table below and read that file. Quote and paraphrase from it; do not fabricate internals from memory.
 
@@ -23,12 +23,12 @@ Conceptual questions sometimes blur into implementation. If the user asks "how d
 
 | Topic | When the user is asking about… | Read |
 |---|---|---|
-| Database engine: overview | What HydrAIDE is, struct-as-schema philosophy, where SQL is and isn't | [`docs/features/database-engine.md`](../../docs/features/database-engine.md) |
+| Database engine — overview | What HydrAIDE is, struct-as-schema philosophy, where SQL is and isn't | [`docs/features/database-engine.md`](../../docs/features/database-engine.md) |
 | Struct-first data model | Why your Go struct *is* the schema, how it maps to Treasures, why msgpack | [`docs/features/struct-first-data-model.md`](../../docs/features/struct-first-data-model.md) |
 | Deterministic addressing | How `Sanctuary/Realm/Swamp` hashes to a folder and to a server, why there's no metadata service | [`docs/features/deterministic-addressing.md`](../../docs/features/deterministic-addressing.md) |
 | Swamp lifecycle | How Swamps are summoned, idle-evicted from memory, zero-garbage cleanup, `CloseAfterIdle` semantics | [`docs/features/swamp-lifecycle.md`](../../docs/features/swamp-lifecycle.md) |
 | V2 storage engine | `.hyd` file format, append-only writes, compressed blocks, compaction, header layout | [`docs/features/v2-storage-engine.md`](../../docs/features/v2-storage-engine.md) |
-| Query engine | Server-side filters (AND/OR, vector, geo, nested-slice, phrase, IN). Internals and design intent | [`docs/features/query-engine.md`](../../docs/features/query-engine.md) |
+| Query engine | Server-side filters, AND/OR, vector, geo, nested-slice, phrase, IN — internals and design intent | [`docs/features/query-engine.md`](../../docs/features/query-engine.md) |
 | Concurrency safety | Per-Treasure locking, lock-free reads, write queueing, why Swamps don't deadlock | [`docs/features/concurrency-safe.md`](../../docs/features/concurrency-safe.md) |
 | Built-in business locks | Cross-service distributed locks, FIFO queue, TTL semantics, when to use them | [`docs/features/built-in-business-lock.md`](../../docs/features/built-in-business-lock.md) |
 | Reactivity & subscriptions | How writes emit events, why there's no separate broker, FIFO ordering, what Subscribe is *not* | [`docs/features/reactivity-and-subscription-logic.md`](../../docs/features/reactivity-and-subscription-logic.md) |
