@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "hydraide",
+  "version": "1.0.0",
+  "description": "HydrAIDE Claude Code plugin marketplace. Installs the hydraide plugin which bundles three skills (hydraidego for the Go SDK, hydraidectl for server operations, and hydraide as a concept-doc router) plus three slash commands (/hydraide-new-model, /hydraide-review, /hydraide-debug).",
+  "owner": {
+    "name": "HydrAIDE",
+    "url": "https://github.com/hydraide/hydraide"
+  },
+  "plugins": [
+    {
+      "name": "hydraide",
+      "description": "Build, operate, and learn HydrAIDE with Claude Code. Bundles the hydraidego (Go SDK), hydraidectl (server operations), and hydraide (concepts router) skills, plus interactive slash commands for model generation, code review, and debugging.",
+      "source": "./plugins/hydraide",
+      "category": "development"
+    }
+  ]
+}

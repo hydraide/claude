@@ -12,7 +12,7 @@ Three skills, automatically activated when relevant to your conversation:
 | **`hydraidego`** | Building Go applications: Profile/Catalog modelling, struct tags, server-side filters, locks, subscriptions, patches |
 | **`hydraidectl`** | Operating HydrAIDE servers: install, upgrade, backup/restore, V1→V2 migration, observe, debug |
 
-Slash commands (coming soon):
+Three slash commands you can run yourself:
 
 - `/hydraide-new-model`: interactive Profile/Catalog model generator with `RegisterPattern` boilerplate and a test scaffold
 - `/hydraide-review`: structured code review against the HydrAIDE pitfall checklist
@@ -40,11 +40,25 @@ Then in the **Marketplaces** tab, toggle auto-update for `hydraide`. Otherwise, 
 - **Not a copy of HydrAIDE.** It contains skills (instructions for Claude) and a small set of concept docs. Source code, server, SDK, and full documentation remain in [`hydraide/hydraide`](https://github.com/hydraide/hydraide).
 - **Not a runtime dependency.** Removing the plugin does not affect any HydrAIDE instance you operate.
 
+## Repository layout
+
+This repo is a Claude Code marketplace with one plugin. The marketplace catalog is `.claude-plugin/marketplace.json` at the root; the plugin itself lives under `plugins/hydraide/`:
+
+```
+.claude-plugin/marketplace.json   # marketplace catalog (this repo's contract)
+plugins/hydraide/
+  .claude-plugin/plugin.json      # plugin manifest
+  skills/                         # auto-activated skills (hydraidego, hydraidectl, hydraide)
+  commands/                       # /hydraide-new-model, /hydraide-review, /hydraide-debug
+  docs/features/                  # concept docs the hydraide skill routes into
+```
+
 ## Editing
 
-This repository is a **mirror**, not a source of truth. Skills and concept docs live in the HydrAIDE monorepo:
+This repository is a **mirror**, not a source of truth. Skills, slash commands, and concept docs live in the HydrAIDE monorepo:
 
 - Skills: [`hydraide/hydraide/.claude/skills/`](https://github.com/hydraide/hydraide/tree/main/.claude/skills)
+- Slash commands: [`hydraide/hydraide/.claude/commands/`](https://github.com/hydraide/hydraide/tree/main/.claude/commands)
 - Concept docs: [`hydraide/hydraide/docs/features/`](https://github.com/hydraide/hydraide/tree/main/docs/features)
 
 A GitHub Action in the HydrAIDE monorepo syncs them into this repo whenever they change. Direct commits to `main` here are blocked by branch protection.
