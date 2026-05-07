@@ -1,0 +1,19 @@
+{
+  "name": "hydraide",
+  "description": "HydrAIDE Claude Code plugin. Skills for building Go applications against HydrAIDE, operating server instances with hydraidectl, and learning the engine's internals. Bundles three skills (hydraide, hydraidego, hydraidectl) and conceptual documentation.",
+  "version": "0.1.0",
+  "author": {
+    "name": "HydrAIDE",
+    "url": "https://github.com/hydraide/hydraide"
+  },
+  "homepage": "https://github.com/hydraide/hydraide",
+  "repository": "https://github.com/hydraide/claude",
+  "license": "Apache-2.0",
+  "keywords": [
+    "hydraide",
+    "go",
+    "grpc",
+    "database",
+    "structure-first"
+  ]
+}
