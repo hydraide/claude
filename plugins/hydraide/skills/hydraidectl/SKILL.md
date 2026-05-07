@@ -18,7 +18,7 @@ The full per-command flag reference is in [`docs/hydraidectl/`](https://github.c
 curl -sSfL https://raw.githubusercontent.com/hydraide/hydraide/main/scripts/install-hydraidectl.sh | bash
 ```
 
-Full installation guide (including Docker and manual paths): [`docs/hydraidectl/hydraidectl-install.md`](https://github.com/hydraide/hydraide/blob/main/docs/hydraidectl/hydraidectl-install.md).
+Full installation guide (including Docker and manual paths): [`docs/hydraidectl/hydraidectl-install.md`](../../docs/hydraidectl/hydraidectl-install.md).
 
 ---
 
@@ -75,7 +75,7 @@ Full installation guide (including Docker and manual paths): [`docs/hydraidectl/
 | `migrate v2-migrate-format -i <instance>` | Upgrade `.hyd` file headers in-place to the optimized format that embeds the swamp name (faster ~100-byte metadata scans). Idempotent. |
 | `cleanup -i <instance>` | After a migration, remove the obsolete files (V1 chunk folders or pre-format `.hyd` originals). |
 
-See [`docs/hydraidectl/hydraidectl-migration.md`](https://github.com/hydraide/hydraide/blob/main/docs/hydraidectl/hydraidectl-migration.md) for the full migration procedure.
+See [`docs/hydraidectl/hydraidectl-migration.md`](../../docs/hydraidectl/hydraidectl-migration.md) for the full migration procedure.
 
 ### Maintenance
 
@@ -146,7 +146,7 @@ sudo hydraidectl upgrade -i instance-c
 
 ### Filesystem choice
 
-Use **ext4** on the data volume by default. HydrAIDE buffers writes in memory and flushes them in compressed append-only blocks, so a copy-on-write filesystem like ZFS adds metadata and write-amplification overhead without measurable benefit. XFS works equally well. See [`docs/install/README.md`](https://github.com/hydraide/hydraide/blob/main/docs/install/README.md) for the full hardware/filesystem guidance.
+Use **ext4** on the data volume by default. HydrAIDE buffers writes in memory and flushes them in compressed append-only blocks, so a copy-on-write filesystem like ZFS adds metadata and write-amplification overhead without measurable benefit. XFS works equally well. See [`docs/install/README.md`](../../docs/install/README.md) for the full hardware/filesystem guidance.
 
 ---
 
@@ -173,7 +173,7 @@ at `info`. Pass `--advanced` to expose every tunable. To change settings
 afterwards: `sudo hydraidectl edit -i <instance>`.
 
 The full quickstart (with the SDK snippet for connecting from an app) is in
-[`docs/install/quickstart.md`](https://github.com/hydraide/hydraide/blob/main/docs/install/quickstart.md).
+[`docs/install/quickstart.md`](../../docs/install/quickstart.md).
 
 ### B. Production upgrade
 
@@ -302,8 +302,8 @@ For deeper diagnostics, the `journalctl` log of the instance unit is the first p
 |---|---|
 | CLI source | [`app/hydraidectl/cmd/`](https://github.com/hydraide/hydraide/blob/main/app/hydraidectl/cmd/) |
 | Full per-command flag reference | [`docs/hydraidectl/README.md`](https://github.com/hydraide/hydraide/blob/main/docs/hydraidectl/README.md) (index → 4 category pages) |
-| Installation guide | [`docs/hydraidectl/hydraidectl-install.md`](https://github.com/hydraide/hydraide/blob/main/docs/hydraidectl/hydraidectl-install.md) |
-| Migration guide | [`docs/hydraidectl/hydraidectl-migration.md`](https://github.com/hydraide/hydraide/blob/main/docs/hydraidectl/hydraidectl-migration.md) |
-| Filesystem and hardware guidance | [`docs/install/README.md`](https://github.com/hydraide/hydraide/blob/main/docs/install/README.md) |
+| Installation guide | [`docs/hydraidectl/hydraidectl-install.md`](../../docs/hydraidectl/hydraidectl-install.md) |
+| Migration guide | [`docs/hydraidectl/hydraidectl-migration.md`](../../docs/hydraidectl/hydraidectl-migration.md) |
+| Filesystem and hardware guidance | [`docs/install/README.md`](../../docs/install/README.md) |
 | Storage engine internals | [`docs/features/v2-storage-engine.md`](../../docs/features/v2-storage-engine.md) |
 | Go SDK modelling, filters, patches | [`hydraidego` skill](../hydraidego/SKILL.md) |
