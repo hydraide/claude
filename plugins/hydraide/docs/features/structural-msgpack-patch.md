@@ -18,7 +18,7 @@ When a client issues a `PatchTreasures` RPC, it carries a multi-key batch. Each 
 
 * an ordered list of **typed ops** — `SET`, `DELETE`, `INC`, `APPEND`, `PREPEND`, `REMOVE_AT`, `REMOVE_VAL`, `MERGE`,
 * an optional **pre-condition** (`EQUAL`, `NOT_EQUAL`, `GREATER_THAN`/`OR_EQUAL`, `LESS_THAN`/`OR_EQUAL`, `EXISTS`, `NOT_EXISTS`),
-* metadata flags (`SetUpdatedAt`, `SetUpdatedBy`, `SetCreatedAt`, `SetCreatedBy`).
+* metadata flags (`SetUpdatedAt`, `SetUpdatedBy`, `SetCreatedAt`, `SetCreatedBy`, `SetExpiredAt`, `ClearExpiredAt`).
 
 For each key the server walks the FIFO lock queue, summons the existing MessagePack body, parses only its **structural skeleton** (no leaf decoding — leaves stay as raw byte ranges into the original blob), evaluates the condition, applies every op against the skeleton in order, and emits a freshly serialized blob where every untouched leaf is byte-copied verbatim from the input. Mutated leaves carry their pre-encoded msgpack bytes from the client.
 
@@ -53,7 +53,7 @@ A `PatchCondition` is evaluated once, before any op runs. If the comparison does
 * **Atomic multi-field updates** — flip several flags at once with one guard hold and one disk write
 * **Concurrency-friendly** — different keys run in parallel; the same key serializes via the existing FIFO queue that powers `IncrementInt8`
 * **Conditional safety** — optimistic-style pre-checks built into the wire format
-* **Auto-create + metadata in one call** — `CreateIfNotExist` plus `SetCreatedAt`/`SetCreatedBy`/`SetUpdatedAt`/`SetUpdatedBy` removes the ceremony around new-record bootstrapping
+* **Auto-create + metadata in one call** — `CreateIfNotExist` plus `SetCreatedAt`/`SetCreatedBy`/`SetUpdatedAt`/`SetUpdatedBy`/`SetExpiredAt`/`ClearExpiredAt` removes the ceremony around new-record bootstrapping and lets you attach, slide, or drop a TTL in the same call as the body mutation
 
 ## Comparable primitives elsewhere
 
@@ -82,8 +82,33 @@ Stick with `CatalogSave` (full-record overwrite) when:
 * You don't have concurrent writers per key (and never will)
 * You're working with Profile Swamps — those store one field per Treasure, so the patch primitive doesn't apply; `ProfileSave` already gives you field-level overrides
 
+## Batched Patches with Per-Request Conditions
+
+`CatalogPatchFieldsMany` dispatches a multi-key batch of patches in a single `PatchTreasures` RPC. Each `PatchManyRequest` can carry its own `Cond *PatchCond` — the same `IfField*` semantics as the single-key builder, expressed as a value rather than a fluent chain so a slice of independent CAS-gated patches travels in one round-trip:
+
+```go
+requests := []*hydraidego.PatchManyRequest{
+    {
+        Key:    "domain1.hu",
+        Fields: map[string]any{"ClaimedBy": "worker-A", "Counter": int32(1)},
+        Cond:   &hydraidego.PatchCond{Op: hydraidego.PatchCondEqual, Path: "ClaimedBy", Value: ""},
+    },
+    {
+        Key:    "domain2.hu",
+        Fields: map[string]any{"ClaimedBy": "worker-A", "Counter": int32(1)},
+        Cond:   &hydraidego.PatchCond{Op: hydraidego.PatchCondLessThan, Path: "Counter", Value: int32(3)},
+    },
+}
+err := h.CatalogPatchFieldsMany(ctx, swamp, requests, callback)
+```
+
+Each request reports its own `PatchStatus` — `PATCHED`, `CONDITION_NOT_MET`, `TYPE_MISMATCH`, etc. — exactly like the single-key builder, so per-key business outcomes never short-circuit the rest of the batch. Use this for batched optimistic-style claims, idempotent counter increments with monotonic guards, and any flow where you'd otherwise issue many `IfField*().Exec()` calls in sequence.
+
+For TTL-driven claim flows (where the *selection* itself should be expiration-aware), reach for [`patch-expired-treasures.md`](patch-expired-treasures.md) — the per-treasure condition there fires after an atomic disjoint-subset selection, not as a per-request gate.
+
 ## See Also
 
+* TTL-driven in-place patches: [`patch-expired-treasures.md`](patch-expired-treasures.md)
 * SDK reference: [`docs/sdk/go/go-sdk.md`](../sdk/go/go-sdk.md) — search for *Field-Level Patches* for the Go API and end-to-end examples
 * Engine internals: [`app/core/hydra/swamp/treasure/msgpackpatch/`](../../app/core/hydra/swamp/treasure/msgpackpatch/) — the structural skeleton parser, op pipeline, and condition evaluator
 * Wire format: [`proto/hydraide.proto`](../../proto/hydraide.proto) — search for `PatchTreasures`, `PatchOp`, `PatchCondition`, `PatchResult`
